@@ -51,7 +51,6 @@ class PlayState extends FlxState
 	private var _tile:Tile;
 	private var _tiles:Array<Tile>;
 	private var _selected:Array<Tile>;
-	private var _temp:Array<Tile>;
 	private var sb:StringBuf;
 	private var validSb:Bool;
 	private var gameOver:Bool;
@@ -183,9 +182,7 @@ class PlayState extends FlxState
 			resetButton.screenCenter();
 			add(resetButton);
 		} else {
-			turnDis.destroy();
-			turnDis = new FlxText(180, 50, FlxG.width, "Turns Remaining: " + Std.string(turns), 10);
-			add(turnDis);
+			turnDis.text = "Turns Remaining: " + Std.string(turns);
 		}
 	}
 
@@ -198,35 +195,21 @@ class PlayState extends FlxState
 		gameOver = false;
 		sb = new StringBuf();
 		sbClearCallback();
-		_temp = new Array<Tile>();
 		for (v in _tiles)
 		{
-			var temp:Tile = v;
-			v.destroy();
 			var val:String = genChar();
-			_tile = new Tile(temp.getX(), temp.getY(), val, null);
-			_tile.onDown.callback = addTileCallback.bind(val, _tile);
-			_tile.label.color = FlxColor.WHITE;
-			_temp.push(_tile);
-			add(_tile);
+			v.text = val;
+			v.onDown.callback = addTileCallback.bind(val, v);
+			v.label.color = FlxColor.WHITE;
 		}
-		_tiles = _temp;
 
 		gameOverText.destroy();
 		resetButton.destroy();
-		healthDis.destroy();
-		turnDis.destroy();
-		dmgDis.destroy();
-		levDis.destroy();
 
-		healthDis = new FlxText(180, 10, FlxG.width, "Dam Health: " + Std.string(health), 10);
-		turnDis = new FlxText(180, 50, FlxG.width, "Turns Remaining: " + Std.string(turns), 10);
-		dmgDis = new FlxText(180, 90, FlxG.width, "Predicted Damage: " + Std.string(dmg), 10);
-		levDis = new FlxText(180, 130, FlxG.width, "Level: " + Std.string(level), 10);
-		add(healthDis);
-		add(turnDis);
-		add(dmgDis);
-		add(levDis);
+		turnDis.text = "Turns Remaining: " + Std.string(turns);
+		dmgDis.text = "Predicted Damage: " + Std.string(dmg);
+		levDis.text = "Level: " + Std.string(level);
+		healthDis.text = "Dam Health: " + Std.string(health);
 	}
 
 	function addTileCallback(str:String, t:Tile):Void
@@ -244,16 +227,11 @@ class PlayState extends FlxState
 		{
 			sb.add(str);
 			dmg += _values.get(str);
-			dmgDis.destroy();
-			dmgDis = new FlxText(180, 90, FlxG.width, "Predicted Damage: " + Std.string(dmg), 10);
-			add(dmgDis);
+			dmgDis.text = "Predicted Damage: " + Std.string(dmg);
 			t.label.color = FlxColor.RED;
 			_selected.push(t);
 			validSb = validateSb();
-			built.destroy();
-			built = new FlxText(10, FlxG.height - 50, sb.toString(), 16);
-			built.alignment = CENTER;
-			add(built);
+			built.text = sb.toString();
 		}
 	}
 
@@ -271,47 +249,31 @@ class PlayState extends FlxState
 			{
 				v.label.color = FlxColor.WHITE;
 			}
-			built.destroy();
-			built = new FlxText(10, FlxG.height - 50, sb.toString(), 16);
-			built.alignment = CENTER;
-			add(built);
+			built.text = sb.toString();
 
 			for (v in _selected)
 			{	
-				var temp:Tile = v;
-				v.destroy();
-				_tiles.remove(v);
 				var val:String = genChar();
-				_tile = new Tile(temp.getX(), temp.getY(), val, null);
-				_tile.onDown.callback = addTileCallback.bind(val, _tile);
-				_tile.label.color = FlxColor.WHITE;
-				_tiles.push(_tile);
-				add(_tile);
+				v.text = val;
+				v.onDown.callback = addTileCallback.bind(val, v);
+				v.label.color = FlxColor.WHITE;
 			}
 
 			_selected = new Array<Tile>();
 			health -= dmg;
 			dmg = 0;
-			dmgDis.destroy();
-			dmgDis = new FlxText(180, 90, FlxG.width, "Predicted Damage: " + Std.string(dmg), 10);
-			add(dmgDis);
+			dmgDis.text = "Predicted Damage: " + Std.string(dmg);
 			if (health <= 0) {
 				maxHealth = Std.int(maxHealth * 1.5);
 				health = maxHealth;
 				level++;
 				turns = 5; 
-				turnDis.destroy();
-				levDis.destroy();
-				turnDis = new FlxText(180, 50, FlxG.width, "Turns Remaining: " + Std.string(turns), 10);
-				levDis = new FlxText(180, 130, FlxG.width, "Level: " + Std.string(level), 10);
-				add(turnDis);
-				add(levDis);
+				turnDis.text = "Turns Remaining: " + Std.string(turns);
+				levDis.text = "Level: " + Std.string(level);
 			} else {
 				updateTurns();
 			}
-			healthDis.destroy();
-			healthDis = new FlxText(180, 10, FlxG.width, "Dam Health: " + Std.string(health), 10);
-			add(healthDis);
+			healthDis.text = "Dam Health: " + Std.string(health);
 			return;
 		}
 	}
@@ -331,13 +293,8 @@ class PlayState extends FlxState
 		}
 		_selected = new Array<Tile>();
 		dmg = 0;
-		dmgDis.destroy();
-		dmgDis = new FlxText(180, 90, FlxG.width, "Predicted Damage: " + Std.string(dmg), 10);
-		add(dmgDis);
-		built.destroy();
-		built = new FlxText(10, FlxG.height - 50, sb.toString(), 16);
-		built.alignment = CENTER;
-		add(built);
+		dmgDis.text = "Predicted Damage: " + Std.string(dmg);
+		built.text = sb.toString();
 	}
 
 	function deleteCallback():Void
@@ -353,14 +310,9 @@ class PlayState extends FlxState
 		var ret:Tile = _selected.pop();
 		ret.label.color = FlxColor.WHITE;
 		dmg -= _values.get(ret.label.text);
-		dmgDis.destroy();
-		dmgDis = new FlxText(180, 90, FlxG.width, "Predicted Damage: " + Std.string(dmg), 10);
-		add(dmgDis);
+		dmgDis.text = "Predicted Damage: " + Std.string(dmg);
 		validSb = validateSb();
-		built.destroy();
-		built = new FlxText(10, FlxG.height - 50, sb.toString(), 16);
-		built.alignment = CENTER;
-		add(built);
+		built.text = sb.toString();
 	}
 
 	function randomCallback():Void
@@ -373,23 +325,15 @@ class PlayState extends FlxState
 		sb = new StringBuf();
 		sbClearCallback();
 		updateTurns();
-		_temp = new Array<Tile>();
 		for (v in _tiles)
 		{	
-			var temp:Tile = v;
-			v.destroy();
 			var val:String = genChar();
-			_tile = new Tile(temp.getX(), temp.getY(), val, null);
-			_tile.onDown.callback = addTileCallback.bind(val, _tile);
-			_tile.label.color = FlxColor.WHITE;
-			_temp.push(_tile);
-			add(_tile);
+			v.text = val;
+			v.onDown.callback = addTileCallback.bind(val, v);
+			v.label.color = FlxColor.WHITE;
 		}
 
-		_tiles = _temp;
-		turnDis.destroy();
-		turnDis = new FlxText(180, 50, FlxG.width, "Turns Remaining: " + Std.string(turns), 10);
-		add(turnDis);
+		turnDis.text = "Turns Remaining: " + Std.string(turns);
 	}
 
 	function fillDictionary():Void
