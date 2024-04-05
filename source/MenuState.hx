@@ -12,7 +12,10 @@ class MenuState extends FlxState
 {
 	private var titleText:FlxText;
 	private var playButton:FlxButton;
-
+	
+	/**
+	 * Creates the title menu screen. 
+	 */
 	override public function create():Void
 	{
 		FlxG.cameras.bgColor = FlxColor.BLACK;
@@ -36,6 +39,9 @@ class MenuState extends FlxState
 		super.update(elapsed);
 	}
 
+	/**
+	 * Creates the title text.
+	 */
 	private function createTitle():Void
 	{
 		titleText = new FlxText(FlxG.width / 2, 40, "Dam Beavers", 32);
