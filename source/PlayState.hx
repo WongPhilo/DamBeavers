@@ -112,7 +112,7 @@ class PlayState extends FlxState
 		var tileX = 10;
 		var tileY = 10;
 		sb = new StringBuf();
-		built = new FlxText(50, FlxG.height - 50, FlxG.width, sb.toString(), 16);
+		built = new FlxText(25, FlxG.height - 50, FlxG.width, sb.toString(), 16);
 		add(built);
 		for (i in 0...5)
 		{
