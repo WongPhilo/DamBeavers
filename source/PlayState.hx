@@ -1,16 +1,12 @@
 package;
 
 import flixel.FlxG;
-import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
 import flixel.text.FlxText;
-import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import openfl.Assets;
-import openfl.Lib;
-import haxe.ds.HashMap;
 
 using StringTools;
 
@@ -22,33 +18,10 @@ class PlayState extends FlxState
 		"B", "C", "D", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z"
 	];
 	public var _values:Map<String, Int> = [
-		"E" => 1,
-		"T" => 1,
-		"A" => 1,
-		"I" => 1,
-		"N" => 1,
-		"O" => 1,
-		"S" => 1,
-		"H" => 1,
-		"R" => 1,
-		"D" => 1,
-		"L" => 1,
-		"U" => 1,
-		"C" => 1,
-		"M" => 1,
-		"F" => 1,
-		"W" => 2,
-		"Y" => 2,
-		"G" => 2, 
-		"P" => 2, 
-		"B" => 2,
-		"V" => 2, 
-		"K" => 2, 
-		"Q" => 3,
-		"J" => 3,
-		"X" => 3,
-		"Z" => 3];
-		
+		"E" => 1, "T" => 1, "A" => 1, "I" => 1, "N" => 1, "O" => 1, "S" => 1, "H" => 1, "R" => 1, "D" => 1, "L" => 1, "U" => 1, "C" => 1, "M" => 1, "F" => 1,
+		"W" => 2, "Y" => 2, "G" => 2, "P" => 2, "B" => 2, "V" => 2, "K" => 2, "Q" => 3, "J" => 3, "X" => 3, "Z" => 3
+	];
+
 	// Private Groups
 	private var _tiles:Array<Tile>;
 	private var _selected:Array<Tile>;
@@ -86,7 +59,7 @@ class PlayState extends FlxState
 	 * Creates and initializes a new game state.
 	 */
 	override public function create():Void
-	{	
+	{
 		// Initialize arrays.
 		super.create();
 		gameOver = false;
@@ -181,7 +154,7 @@ class PlayState extends FlxState
 	 */
 	function validateSb():Bool
 	{
-		if (_dictionary.contains(sb.toString()))
+		if (sb.toString() != "" && _dictionary.contains(sb.toString()))
 		{
 			launch.color = FlxColor.GREEN;
 			return true;
@@ -200,7 +173,8 @@ class PlayState extends FlxState
 	function updateTurns():Void
 	{
 		turns--;
-		if (turns <= 0) {
+		if (turns <= 0)
+		{
 			gameOver = true;
 			gameOverText = new FlxText(FlxG.width / 2, 40, "Game over!", 32);
 			gameOverText.x -= gameOverText.width / 2;
@@ -209,7 +183,9 @@ class PlayState extends FlxState
 			resetButton = new FlxButton(0, 0, "Reset?", resetCallback.bind());
 			resetButton.screenCenter();
 			add(resetButton);
-		} else {
+		}
+		else
+		{
 			turnDis.text = "Turns Remaining: " + Std.string(turns);
 		}
 	}
@@ -250,8 +226,9 @@ class PlayState extends FlxState
 	 * @param t The tile selected.
 	 */
 	function addTileCallback(str:String, t:Tile):Void
-	{	
-		if (gameOver) {
+	{
+		if (gameOver)
+		{
 			return;
 		}
 
@@ -284,7 +261,7 @@ class PlayState extends FlxState
 		{
 			return;
 		}
-		
+
 		if (validSb)
 		{
 			sb = new StringBuf();
@@ -295,7 +272,7 @@ class PlayState extends FlxState
 			built.text = sb.toString();
 
 			for (v in _selected)
-			{	
+			{
 				var val:String = genChar();
 				v.text = val;
 				v.onDown.callback = addTileCallback.bind(val, v);
@@ -306,16 +283,20 @@ class PlayState extends FlxState
 			health -= dmg;
 			dmg = 0;
 			dmgDis.text = "Predicted Damage: " + Std.string(dmg);
-			if (health <= 0) {
+			if (health <= 0)
+			{
 				maxHealth = Std.int(maxHealth * 1.5);
 				health = maxHealth;
 				level++;
-				turns = 5; 
+				turns = 5;
 				turnDis.text = "Turns Remaining: " + Std.string(turns);
 				levDis.text = "Level: " + Std.string(level);
-			} else {
+			}
+			else
+			{
 				updateTurns();
 			}
+			validSb = validateSb();
 			healthDis.text = "Dam Health: " + Std.string(health);
 			return;
 		}
@@ -330,7 +311,6 @@ class PlayState extends FlxState
 		{
 			return;
 		}
-		
 
 		sb = new StringBuf();
 		for (v in _selected)
@@ -352,7 +332,7 @@ class PlayState extends FlxState
 		{
 			return;
 		}
-		
+
 		var tempstr:String = sb.toString();
 		sb = new StringBuf();
 		sb.addSub(tempstr, 0, tempstr.length - 1);
@@ -374,12 +354,12 @@ class PlayState extends FlxState
 		{
 			return;
 		}
-		
+
 		sb = new StringBuf();
 		sbClearCallback();
 		updateTurns();
 		for (v in _tiles)
-		{	
+		{
 			var val:String = genChar();
 			v.text = val;
 			v.onDown.callback = addTileCallback.bind(val, v);
